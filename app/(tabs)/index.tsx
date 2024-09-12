@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
   textContainer: {
     position: "absolute",
     width: "100%",
-    rowGap: 4,
+    rowGap: 6,
     bottom: 20,
     justifyContent: "space-between",
     paddingHorizontal: 20,
