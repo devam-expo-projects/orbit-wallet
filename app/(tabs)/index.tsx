@@ -15,6 +15,8 @@ const TAB_BAR_HEIGHT = Platform.OS === "ios" ? 78 : 78; // Adjust for platform
 const HomeScreen = () => {
   const [images, setImages] = useState<string[]>([]);
   const screenHeight = Dimensions.get("window").height;
+  const androidHeight = screenHeight;
+  const iOSHeight = screenHeight - TAB_BAR_HEIGHT;
 
   useEffect(() => {
     // Fetch images - in this example, fetching 10 random images
@@ -32,22 +34,25 @@ const HomeScreen = () => {
   const IconMenu = () => {
     return (
       <View style={styles.iconContainer}>
-        <AntDesign name="adduser" size={35} color={Colors.light.white} />
+        <AntDesign name="adduser" size={32} color={Colors.light.white} />
         <Ionicons
           name="chatbubbles-outline"
-          size={35}
+          size={32}
           color={Colors.light.white}
         />
-        <FontAwesome name="heart-o" size={35} color={Colors.light.white} />
-        <FontAwesome name="share" size={35} color={Colors.light.white} />
-        <Feather name="send" size={35} color={Colors.light.white} />
+        <FontAwesome name="heart-o" size={32} color={Colors.light.white} />
+        <FontAwesome name="share" size={32} color={Colors.light.white} />
+        <Feather name="send" size={32} color={Colors.light.white} />
       </View>
     );
   };
 
   const renderImageItem = ({ item }: { item: string }) => (
     <View
-      style={[styles.imageContainer, { height: screenHeight - TAB_BAR_HEIGHT }]}
+      style={[
+        styles.imageContainer,
+        { height: Platform.OS === "android" ? androidHeight : iOSHeight },
+      ]}
     >
       <Image source={{ uri: item }} style={styles.image} />
       <View style={styles.textContainer}>
@@ -67,14 +72,12 @@ const HomeScreen = () => {
       data={images}
       keyExtractor={(item, index) => index.toString()}
       renderItem={renderImageItem}
-      pagingEnabled // Ensures one image scrolls at a time
+      pagingEnabled
       showsVerticalScrollIndicator={false}
       decelerationRate="fast"
-      snapToInterval={screenHeight - TAB_BAR_HEIGHT} // Snaps to each image's height
-      snapToAlignment="start" // Aligns the snap at the top of the screen
-      viewabilityConfig={{
-        itemVisiblePercentThreshold: 100, // Ensures one full image is visible
-      }}
+      snapToInterval={Platform.OS === "android" ? androidHeight : iOSHeight}
+      snapToAlignment="start"
+      viewabilityConfig={{ itemVisiblePercentThreshold: 100 }}
     />
   );
 };
@@ -100,7 +103,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: "100%",
     rowGap: 4,
-    bottom: 16,
+    bottom: 20,
     justifyContent: "space-between",
     paddingHorizontal: 20,
   },

@@ -3,6 +3,9 @@ import React from "react";
 
 import { TabBarIcon } from "@/app-example/components/navigation/TabBarIcon";
 import { Colors } from "@/constants/Colors";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+import Feather from "@expo/vector-icons/Feather";
 
 export default function TabLayout() {
   return (
@@ -18,10 +21,7 @@ export default function TabLayout() {
           title: "Home",
           headerShown: false,
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
-              name={focused ? "home" : "home-outline"}
-              color={color}
-            />
+            <Ionicons name={"home-outline"} size={24} color="black" />
           ),
         }}
       />
@@ -42,10 +42,7 @@ export default function TabLayout() {
         options={{
           title: "Explore",
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
-              name={focused ? "code-slash" : "code-slash-outline"}
-              color={color}
-            />
+            <Ionicons name="add-circle-outline" size={28} color="black" />
           ),
         }}
       />
@@ -55,10 +52,7 @@ export default function TabLayout() {
         options={{
           title: "Community",
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
-              name={focused ? "code-slash" : "code-slash"}
-              color={color}
-            />
+            <Feather name="users" size={24} color="black" />
           ),
         }}
       />
@@ -67,10 +61,7 @@ export default function TabLayout() {
         options={{
           title: "Profile",
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
-              name={focused ? "code-slash" : "code-slash"}
-              color={color}
-            />
+            <FontAwesome6 name="user-circle" size={24} color="black" />
           ),
         }}
       />
