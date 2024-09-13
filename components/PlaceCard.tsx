@@ -1,35 +1,30 @@
-import React from "react";
-import { View, Image, TouchableOpacity, Dimensions, StyleSheet } from "react-native";
+import { flex } from "@/constants/Style";
+import { Dimensions, Image, TouchableOpacity, View } from "react-native";
 
 const PlaceCard = ({ index, children }: { index: number; children?: any }) => {
-  const { width, height } = Dimensions.get("window");
+  const screenWidth = Dimensions.get("window").width;
+  const screenHeight = Dimensions.get("window").height;
 
   return (
-    <TouchableOpacity style={styles.cardContainer}>
+    <TouchableOpacity
+      style={{ ...flex(), marginRight: 10, overflow: "scroll" }}
+    >
       <Image
-        source={{ uri: `https://picsum.photos/id/${index + 10}/400/100` }}
-        style={{ ...styles.image, width: width / 2.5, height: height / 8 }}
+        source={{
+          uri: `https://picsum.photos/id/${index + 10}/400/100`,
+        }}
+        style={{
+          height: screenHeight / 8,
+          width: screenWidth / 2.3,
+          borderRadius: 6,
+          resizeMode: "cover",
+        }}
       />
-      <View style={styles.textContainer}>
+      <View style={{ position: "absolute", bottom: 10, left: 15 }}>
         {children}
       </View>
     </TouchableOpacity>
   );
 };
-
-const styles = StyleSheet.create({
-  cardContainer: {
-    marginRight: 10,
-  },
-  image: {
-    borderRadius: 6,
-    resizeMode: "cover",
-  },
-  textContainer: {
-    position: "absolute",
-    bottom: 10,
-    left: 15,
-  },
-});
 
 export default PlaceCard;

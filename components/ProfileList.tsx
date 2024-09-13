@@ -1,27 +1,17 @@
 import { flex } from "@/constants/Style";
-import { View } from "react-native";
+import { FlatList, View } from "react-native";
+import ProfileCard from "./ProfileCard";
 import ListHeading from "./ListHeading";
-import { FlatList } from "react-native";
-import PlaceCard from "./PlaceCard";
-import { FirstCardText, SecondCardText } from "./Text";
 
-const ListItems = ({
+const ProfileList = ({
   label,
   style,
   startIndex = 0,
-  textArray,
-  firstCard,
 }: {
   label: string;
   style?: any;
   startIndex?: number;
-  textArray: string[] | any;
-  firstCard: boolean;
 }) => {
-  const imageText = textArray?.map((item: string) => {
-    return item?.length > 15 ? item.slice(0, 15) + "..." : item;
-  });
-
   return (
     <View
       style={{
@@ -41,19 +31,16 @@ const ListItems = ({
         }}
       >
         <FlatList
-          data={[...new Array(10)]}
+          data={[...new Array(3)]}
           horizontal
           renderItem={({ item, index }) => {
             return (
-              <PlaceCard index={index + startIndex} key={index}>
-                {firstCard ? (
-                  <FirstCardText text={imageText?.[index] || ""} />
-                ) : (
-                  <SecondCardText
-                    text={[textArray?.[index]] || ""}
-                  ></SecondCardText>
-                )}
-              </PlaceCard>
+              <ProfileCard
+                index={index + startIndex}
+                key={index}
+                name={"playparker"}
+                follwers={"234"}
+              ></ProfileCard>
             );
           }}
           showsHorizontalScrollIndicator={false}
@@ -64,4 +51,4 @@ const ListItems = ({
   );
 };
 
-export default ListItems;
+export default ProfileList;
