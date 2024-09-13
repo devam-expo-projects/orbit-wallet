@@ -1,82 +1,85 @@
-import { border, flex } from "@/constants/Style";
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, Dimensions } from "react-native";
-import { FlatList, Image, Platform } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Dimensions,
+  FlatList,
+  Image,
+  Platform,
+} from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Feather from "@expo/vector-icons/Feather";
 import { Colors } from "@/constants/Colors";
-import Ionicons from "@expo/vector-icons/Ionicons";
 
 const IMAGE_URL = "https://picsum.photos/";
-const TAB_BAR_HEIGHT = Platform.OS === "ios" ? 78 : 78; // Adjust for platform
+const PAGE_SIZE = 10;
+const TAB_BAR_HEIGHT = Platform.OS === "ios" ? 78 : 78;
+
+const IconMenu = () => (
+  <View style={styles.iconContainer}>
+    <AntDesign name="adduser" size={32} color={Colors.light.white} />
+    <Ionicons name="chatbubbles-outline" size={32} color={Colors.light.white} />
+    <FontAwesome name="heart-o" size={32} color={Colors.light.white} />
+    <FontAwesome name="share" size={32} color={Colors.light.white} />
+    <Feather name="send" size={32} color={Colors.light.white} />
+  </View>
+);
+
+const ImageItem = ({ item, height }: { item: string; height: number }) => (
+  <View style={[styles.imageContainer, { height }]}>
+    <Image source={{ uri: item }} style={styles.image} />
+    <View style={styles.textContainer}>
+      <IconMenu />
+      <Text style={styles.topText}>Caption</Text>
+      <Text style={styles.bottomText}>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+      </Text>
+      <Text style={styles.bottomText}>#lorem #ipsum #dolor #lorem</Text>
+    </View>
+  </View>
+);
 
 const HomeScreen = () => {
   const [images, setImages] = useState<string[]>([]);
+  const [page, setPage] = useState(1);
   const screenHeight = Dimensions.get("window").height;
   const androidHeight = screenHeight;
   const iOSHeight = screenHeight - TAB_BAR_HEIGHT;
+  const currentHeight = Platform.OS === "android" ? androidHeight : iOSHeight;
 
-  useEffect(() => {
-    const fetchImages = async () => {
-      const imageUrls = Array.from(
-        { length: 10 },
-        (_, index) => `${IMAGE_URL}800?random=${index}`
-      );
-      setImages(imageUrls);
-    };
-
-    fetchImages();
-  }, []);
-
-  const IconMenu = () => {
-    return (
-      <View style={styles.iconContainer}>
-        <AntDesign name="adduser" size={32} color={Colors.light.white} />
-        <Ionicons
-          name="chatbubbles-outline"
-          size={32}
-          color={Colors.light.white}
-        />
-        <FontAwesome name="heart-o" size={32} color={Colors.light.white} />
-        <FontAwesome name="share" size={32} color={Colors.light.white} />
-        <Feather name="send" size={32} color={Colors.light.white} />
-      </View>
+  const fetchImages = async (page: number) => {
+    const newImageUrls = Array.from(
+      { length: PAGE_SIZE },
+      (_, index) => `${IMAGE_URL}800?random=${index + page * PAGE_SIZE}`
     );
+    setImages((prevImages) => [...prevImages, ...newImageUrls]);
   };
 
-  const renderImageItem = ({ item }: { item: string }) => (
-    <View
-      style={[
-        styles.imageContainer,
-        { height: Platform.OS === "android" ? androidHeight : iOSHeight },
-      ]}
-    >
-      <Image source={{ uri: item }} style={styles.image} />
-      <View style={styles.textContainer}>
-        <IconMenu></IconMenu>
-        <Text style={styles.topText}>Caption</Text>
-        <Text style={styles.bottomText}>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor empor.
-        </Text>
-        <Text style={styles.bottomText}>#lorem #ipsum #dolor #lorem</Text>
-      </View>
-    </View>
-  );
+  useEffect(() => {
+    fetchImages(page);
+  }, [page]);
+
+  const handleLoadMore = () => {
+    setPage((prevPage) => prevPage + 1);
+  };
 
   return (
     <FlatList
       data={images}
       keyExtractor={(item, index) => index.toString()}
-      renderItem={renderImageItem}
+      renderItem={({ item }) => (
+        <ImageItem item={item} height={currentHeight} />
+      )}
       pagingEnabled
       showsVerticalScrollIndicator={false}
       decelerationRate="fast"
-      snapToInterval={Platform.OS === "android" ? androidHeight : iOSHeight}
+      snapToInterval={currentHeight}
       snapToAlignment="start"
-      viewabilityConfig={{ itemVisiblePercentThreshold: 100 }}
+      onEndReached={handleLoadMore}
+      onEndReachedThreshold={0.5}
     />
   );
 };
@@ -88,10 +91,10 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
   },
   iconContainer: {
-    ...flex({ dir: "column" }),
-    rowGap: 20,
+    flexDirection: "column",
     justifyContent: "flex-end",
     alignItems: "flex-end",
+    rowGap: 20,
   },
   image: {
     width: "100%",
