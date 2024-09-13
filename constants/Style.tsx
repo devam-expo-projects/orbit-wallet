@@ -4,7 +4,7 @@ export const border = ({
   type = "solid",
   color = "red",
   width = 1,
-  radius = 10,
+  radius = 1,
 }: {
   type?: "solid" | "dashed" | "dotted";
   color?: string;

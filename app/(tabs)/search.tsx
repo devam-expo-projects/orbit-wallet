@@ -1,102 +1,360 @@
-import Ionicons from '@expo/vector-icons/Ionicons';
-import { StyleSheet, Image, Platform } from 'react-native';
+import React, { useRef, useState } from "react";
+import {
+  View,
+  ScrollView,
+  StyleSheet,
+  Text,
+  SafeAreaView,
+  Platform,
+  Image,
+  TouchableOpacity,
+  FlatList,
+  Dimensions,
+} from "react-native";
+import { SearchBar } from "@rneui/themed";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import { border, flex } from "@/constants/Style";
+import { hashtagArray, topCommunity } from "@/constants/MockData";
 
-import { Collapsible } from '@/app-example/components/Collapsible';
-import { ExternalLink } from '@/app-example/components/ExternalLink';
-import ParallaxScrollView from '@/app-example/components/ParallaxScrollView';
-import { ThemedText } from '@/app-example/components/ThemedText';
-import { ThemedView } from '@/app-example/components/ThemedView';
-
-export default function Search() {
+const HeadingText = ({ text, style }: { text: string; style?: any }) => {
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-      headerImage={<Ionicons size={310} name="code-slash" style={styles.headerImage} />}>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Search</ThemedText>
-      </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
-      <Collapsible title="File-based routing">
-        <ThemedText>
-          This app has two screens:{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
-        </ThemedText>
-        <ThemedText>
-          The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
-          sets up the tab navigator.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
-          You can open this project on Android, iOS, and the web. To open the web version, press{' '}
-          <ThemedText type="defaultSemiBold">w</ThemedText> in the terminal running this project.
-        </ThemedText>
-      </Collapsible>
-      <Collapsible title="Images">
-        <ThemedText>
-          For static images, you can use the <ThemedText type="defaultSemiBold">@2x</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for
-          different screen densities
-        </ThemedText>
-        <Image source={require('@/assets/images/react-logo.png')} style={{ alignSelf: 'center' }} />
-        <ExternalLink href="https://reactnative.dev/docs/images">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Custom fonts">
-        <ThemedText>
-          Open <ThemedText type="defaultSemiBold">app/_layout.tsx</ThemedText> to see how to load{' '}
-          <ThemedText style={{ fontFamily: 'SpaceMono' }}>
-            custom fonts such as this one.
-          </ThemedText>
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/versions/latest/sdk/font">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Light and dark mode components">
-        <ThemedText>
-          This template has light and dark mode support. The{' '}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook lets you inspect
-          what the user's current color scheme is, and so you can adjust UI colors accordingly.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Animations">
-        <ThemedText>
-          This template includes an example of an animated component. The{' '}
-          <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses
-          the powerful <ThemedText type="defaultSemiBold">react-native-reanimated</ThemedText> library
-          to create a waving hand animation.
-        </ThemedText>
-        {Platform.select({
-          ios: (
-            <ThemedText>
-              The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText>{' '}
-              component provides a parallax effect for the header image.
-            </ThemedText>
-          ),
-        })}
-      </Collapsible>
-    </ParallaxScrollView>
+    <Text
+      style={{ fontSize: 22, fontWeight: "800", color: "#5b7a7f", ...style }}
+    >
+      {text}
+    </Text>
+  );
+};
+
+const SeeAllText = ({ text, style }: { text: string; style?: any }) => {
+  return (
+    <Text
+      style={{ fontSize: 16, fontWeight: "500", color: "#5b7a7f", ...style }}
+    >
+      {text}
+    </Text>
+  );
+};
+
+const SearchHeader = () => {
+  const [search, setSearch] = useState("");
+
+  const handleSearchChange = (text: string) => {
+    setSearch(text);
+  };
+
+  return (
+    <View style={styles.searchHeader}>
+      <HeadingText text={"Discover the world"} style={{ marginBottom: 10 }} />
+      <SearchBar
+        placeholder="Type Here..."
+        value={search}
+        onChangeText={(text: any) => setSearch(text)}
+        platform={Platform.OS === "ios" ? "ios" : "android"}
+        searchIcon={<AntDesign name="search1" size={20} color="black" />}
+        containerStyle={{ padding: 0, backgroundColor: "#f0f2f6", margin: -5 }}
+        inputContainerStyle={{ backgroundColor: "white" }}
+        showCancel={false}
+        clearIcon={<></>}
+        showLoading={false}
+      />
+    </View>
+  );
+};
+
+const HeadingPicture = () => {
+  const screenHeight = Dimensions.get("window").height;
+  return (
+    <TouchableOpacity style={{ marginHorizontal: 20, marginBottom: 16 }}>
+      <Image
+        source={{ uri: "https://picsum.photos/seed/picsum/200/300" }}
+        style={{
+          height: screenHeight / 6,
+          width: "100%",
+          resizeMode: "cover",
+          borderRadius: 12,
+        }}
+      />
+      <Text
+        style={{
+          fontSize: 15,
+          color: "#fff",
+          position: "absolute",
+          bottom: 12,
+          left: 12,
+          fontWeight: "700",
+        }}
+      >
+        #Top search of the day
+      </Text>
+    </TouchableOpacity>
+  );
+};
+
+const FirstCardText = ({ text }: { text: string }) => {
+  return (
+    <Text style={{ color: "#fff", fontSize: 14, fontWeight: 700 }}>{text}</Text>
+  );
+};
+
+const SecondCardText = ({ text }: { text: string[] }) => {
+  const array = text[0];
+  const first =
+    array[0]?.length > 15 ? array[0].slice(0, 15) + "..." : array[0];
+  const second = array[1]?.length ? array[1].slice(0, 15) + "..." : array[1];
+
+  return (
+    <View
+      style={{
+        ...flex({ dir: "column", justify: "flex-start", align: "flex-start" }),
+      }}
+    >
+      <Text style={{ color: "#fff", fontSize: 28, fontWeight: "200" }}>
+        {first}
+      </Text>
+      <Text style={{ color: "#fff", fontSize: 22, fontWeight: "800" }}>
+        {second}
+      </Text>
+    </View>
+  );
+};
+
+const PlaceCard = ({ index, children }: { index: number; children?: any }) => {
+  const screenWidth = Dimensions.get("window").width;
+  const screenHeight = Dimensions.get("window").height;
+
+  return (
+    <TouchableOpacity
+      style={{ ...flex(), marginRight: 10, overflow: "scroll" }}
+    >
+      <Image
+        source={{
+          uri: `https://picsum.photos/id/${index + 10}/400/100`,
+        }}
+        style={{
+          height: screenHeight / 8,
+          width: screenWidth / 2.3,
+          borderRadius: 6,
+          resizeMode: "cover",
+        }}
+      />
+      <View style={{ position: "absolute", bottom: 10, left: 15 }}>
+        {children}
+      </View>
+    </TouchableOpacity>
+  );
+};
+
+const ProfileCard = ({
+  index,
+  name,
+  follwers,
+}: {
+  index: number;
+  name: string;
+  follwers: string;
+}) => {
+  const screenWidth = Dimensions.get("window").width;
+  const screenHeight = Dimensions.get("window").height;
+
+  return (
+    <TouchableOpacity
+      style={{
+        ...flex({ justify: "center", dir: "column" }),
+        overflow: "scroll",
+        marginRight: 16,
+      }}
+    >
+      <Image
+        source={{
+          uri: `https://xsgames.co/randomusers/assets/avatars/female/${index}.jpg`,
+        }}
+        style={{
+          height: screenHeight / 8,
+          width: screenWidth / 3 - 25,
+          borderRadius: (screenWidth / 3 - 25) / 2,
+          resizeMode: "cover",
+          marginBottom: 6,
+        }}
+      />
+      <View style={{}}>
+        <Text
+          style={{
+            fontSize: 13,
+            fontWeight: "700",
+            color: "#5b7a7f",
+            textAlign: "center",
+          }}
+        >
+          {`@${name}`}
+        </Text>
+        <Text
+          style={{
+            fontSize: 10,
+            fontWeight: "400",
+            color: "#5b7a7f",
+            textAlign: "center",
+          }}
+        >
+          {follwers}k Followers
+        </Text>
+      </View>
+    </TouchableOpacity>
+  );
+};
+
+const ListHeading = ({ label }: { label: string }) => {
+  return (
+    <View
+      style={{
+        ...flex({ dir: "row", justify: "space-between" }),
+        marginRight: 20,
+      }}
+    >
+      <HeadingText text={label}></HeadingText>
+      <TouchableOpacity>
+        <SeeAllText text="See all"></SeeAllText>
+      </TouchableOpacity>
+    </View>
+  );
+};
+
+const ListItems = ({
+  label,
+  style,
+  startIndex = 0,
+  textArray,
+  firstCard,
+}: {
+  label: string;
+  style?: any;
+  startIndex?: number;
+  textArray: string[] | any;
+  firstCard: boolean;
+}) => {
+  const imageText = textArray?.map((item: string) => {
+    return item?.length > 15 ? item.slice(0, 15) + "..." : item;
+  });
+
+  return (
+    <View
+      style={{
+        ...flex({ dir: "column", flex: 1 }),
+        rowGap: 12,
+        marginLeft: 20,
+        marginBottom: 16,
+        ...style,
+      }}
+    >
+      <View style={{ ...flex({ dir: "row" }) }}>
+        <ListHeading label={label}></ListHeading>
+      </View>
+      <View
+        style={{
+          ...flex({ dir: "row", justify: "space-between" }),
+        }}
+      >
+        <FlatList
+          data={[...new Array(10)]}
+          horizontal
+          renderItem={({ item, index }) => {
+            return (
+              <PlaceCard index={index + startIndex} key={index}>
+                {firstCard ? (
+                  <FirstCardText text={imageText?.[index] || ""} />
+                ) : (
+                  <SecondCardText
+                    text={[textArray?.[index]] || ""}
+                  ></SecondCardText>
+                )}
+              </PlaceCard>
+            );
+          }}
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={(item, index) => index.toString()}
+        />
+      </View>
+    </View>
+  );
+};
+
+const ProfileList = ({
+  label,
+  style,
+  startIndex = 0,
+}: {
+  label: string;
+  style?: any;
+  startIndex?: number;
+}) => {
+  return (
+    <View
+      style={{
+        ...flex({ dir: "column", flex: 1 }),
+        rowGap: 12,
+        marginLeft: 20,
+        marginBottom: 16,
+        ...style,
+      }}
+    >
+      <View style={{ ...flex({ dir: "row" }) }}>
+        <ListHeading label={label}></ListHeading>
+      </View>
+      <View
+        style={{
+          ...flex({ dir: "row", justify: "space-between" }),
+        }}
+      >
+        <FlatList
+          data={[...new Array(3)]}
+          horizontal
+          renderItem={({ item, index }) => {
+            return (
+              <ProfileCard
+                index={index + startIndex}
+                key={index}
+                name={"playparker"}
+                follwers={"234"}
+              ></ProfileCard>
+            );
+          }}
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={(item, index) => index.toString()}
+        />
+      </View>
+    </View>
+  );
+};
+
+export default function SearchScreen() {
+  return (
+    <SafeAreaView style={styles.container}>
+      <ScrollView style={styles.container}>
+        <SearchHeader />
+        <HeadingPicture />
+        <ListItems
+          label={"Trending hashtags"}
+          textArray={hashtagArray}
+          firstCard={true}
+        ></ListItems>
+        <ListItems
+          label={"Top community"}
+          startIndex={50}
+          textArray={topCommunity}
+          firstCard={false}
+        />
+        <ProfileList label={"Top nomads"}></ProfileList>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  headerImage: {
-    color: '#808080',
-    bottom: -90,
-    left: -35,
-    position: 'absolute',
+  container: {
+    flex: 1,
+    backgroundColor: "#f0f2f6",
   },
-  titleContainer: {
-    flexDirection: 'row',
-    gap: 8,
+  searchHeader: {
+    margin: 16,
   },
 });

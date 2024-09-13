@@ -13,14 +13,22 @@ export default function TabLayout() {
         tabBarActiveTintColor: Colors["light"].tint,
         headerShown: false,
       }}
+      initialRouteName="search"
     >
       <Tabs.Screen
         name="index"
         options={{
           title: "Home",
           headerShown: false,
+          headerTitleStyle: {
+            color: Colors["light"].text,
+          },
           tabBarIcon: ({ color, focused }) => (
-            <Ionicons name={"home-outline"} size={24} color="black" />
+            <Ionicons
+              name={focused ? "home" : "home-outline"}
+              size={24}
+              color="black"
+            />
           ),
         }}
       />
@@ -31,7 +39,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
               name={focused ? "search" : "search-outline"}
-              color={color}
+              color={"black"}
             />
           ),
         }}

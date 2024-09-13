@@ -19,7 +19,6 @@ const HomeScreen = () => {
   const iOSHeight = screenHeight - TAB_BAR_HEIGHT;
 
   useEffect(() => {
-    // Fetch images - in this example, fetching 10 random images
     const fetchImages = async () => {
       const imageUrls = Array.from(
         { length: 10 },
