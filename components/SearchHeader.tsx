@@ -8,7 +8,7 @@ const SearchHeader = () => {
   const [search, setSearch] = useState("");
 
   return (
-    <View style={{margin: 16}}>
+    <View style={{ margin: 16 }}>
       <HeadingText text={"Discover the world"} style={{ marginBottom: 10 }} />
       <SearchBar
         placeholder="Type Here..."
@@ -25,6 +25,5 @@ const SearchHeader = () => {
     </View>
   );
 };
-
 
 export default SearchHeader;

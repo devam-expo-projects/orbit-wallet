@@ -1,39 +1,41 @@
 import React from "react";
 import {
-  View,
   ScrollView,
   StyleSheet,
-  Text,
   SafeAreaView,
-  FlatList,
+  StatusBar,
+  Platform,
 } from "react-native";
-import { flex } from "@/constants/Style";
 import { hashtagArray, topCommunity } from "@/constants/MockData";
 import HeadingPicture from "@/components/HeadingPicture";
 import ProfileList from "@/components/ProfileList";
-import ListHeading from "@/components/ListHeading";
-import PlaceCard from "@/components/PlaceCard";
 import SearchHeader from "@/components/SearchHeader";
 import ListItems from "@/components/ListItems";
+import { border } from "@/constants/Style";
 
 export default function SearchScreen() {
+  // Get the status bar height only if the platform is Android
+  const statusBarHeight =
+    Platform.OS === "android" ? StatusBar.currentHeight : 0;
+
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.container}>
+    <SafeAreaView style={{ flex: 1 }}>
+      <StatusBar barStyle={"dark-content"}></StatusBar>
+      <ScrollView style={[styles.container, { marginTop: statusBarHeight }]}>
         <SearchHeader />
         <HeadingPicture />
         <ListItems
           label={"Trending hashtags"}
           textArray={hashtagArray}
           firstCard={true}
-        ></ListItems>
+        />
         <ListItems
           label={"Top community"}
           startIndex={50}
           textArray={topCommunity}
           firstCard={false}
         />
-        <ProfileList label={"Top nomads"}></ProfileList>
+        <ProfileList label={"Top nomads"} />
       </ScrollView>
     </SafeAreaView>
   );
